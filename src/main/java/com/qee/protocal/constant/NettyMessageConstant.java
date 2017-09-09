@@ -15,7 +15,9 @@ public class NettyMessageConstant {
      */
     public static final byte SERVER_AUTH_CERTI_TYPE = 4;
 
-
+    /**
+     * 心跳请求消息
+     */
     public static final byte HEART_BEAT_CHECK_PING_TYPE = 5;
 
 
