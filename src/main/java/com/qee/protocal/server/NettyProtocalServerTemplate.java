@@ -1,44 +1,48 @@
 package com.qee.protocal.server;
 
-import com.qee.protocal.authentication.AuthorityCertificationResponseHanlder;
-import com.qee.protocal.decoder.ByteBuf2NettyMessageDecoder;
-import com.qee.protocal.encoder.NettyMessage2ByteBufEncoder;
-import com.qee.protocal.heartbeat.HeartBeatCheckResponseHandler;
+import com.qee.protocal.template.NettyProtocalTemplate;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import io.netty.handler.timeout.ReadTimeoutHandler;
 
 import java.net.InetSocketAddress;
+import java.util.Map;
 
 /**
  * Created by zhuqi on 2017/9/8.
  */
-public class NettyProtocalServer {
+public abstract class NettyProtocalServerTemplate extends NettyProtocalTemplate {
+
+
     private ServerBootstrap serverBootstrap;
 
     private EventLoopGroup boss;
 
     private EventLoopGroup worker;
 
+    private EventLoopGroup business;
+
     private String host;
 
 
     private int port;
 
-    public NettyProtocalServer(String host, int port) {
+    public NettyProtocalServerTemplate(String host, int port) {
         this.host = host;
         this.port = port;
     }
 
+
+    @Override
     public void start() throws InterruptedException {
         try {
             serverBootstrap = new ServerBootstrap();
             boss = new NioEventLoopGroup(1);
-            worker = new NioEventLoopGroup();
+            worker = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors() * 2);
+            business = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors() * 2);
 
 
             serverBootstrap.group(boss, worker)
@@ -48,25 +52,31 @@ public class NettyProtocalServer {
                     .childHandler(new ChannelInitializer<Channel>() {
                         @Override
                         protected void initChannel(Channel ch) throws Exception {
-                            ch.pipeline()
-                                    .addLast("log",new LoggingHandler(LogLevel.INFO))
-                                    .addLast("decoder", new ByteBuf2NettyMessageDecoder(6 * 1024, 4, 4, -8, 0, true))
-                                    .addLast("encoder", new NettyMessage2ByteBufEncoder())
-                                    .addLast("timeout", new ReadTimeoutHandler(50))
-                                    .addLast("authority", new AuthorityCertificationResponseHanlder())
-                                    .addLast("hearbeat", new HeartBeatCheckResponseHandler());
+                            Map<String, ChannelHandler> ioHandlerMap = addIOChannelHandlers();
+                            Map<String, ChannelHandler> businessHandlerMap = addBusinessChannelHandlers();
+
+                            addChannelHandler(ch, ioHandlerMap, false, null);
+                            addChannelHandler(ch, businessHandlerMap, true, business);
 
                         }
                     });
             ChannelFuture future = serverBootstrap.bind(new InetSocketAddress(host, port)).sync();
             future.channel().closeFuture().sync();
         } finally {
-            if (boss != null) {
-                boss.shutdownGracefully();
-            }
-            if (worker != null) {
-                worker.shutdownGracefully();
-            }
+            stop();
+        }
+    }
+
+    @Override
+    public void stop() {
+        if (boss != null) {
+            boss.shutdownGracefully();
+        }
+        if (worker != null) {
+            worker.shutdownGracefully();
+        }
+        if (business != null) {
+            business.shutdownGracefully();
         }
     }
 }
