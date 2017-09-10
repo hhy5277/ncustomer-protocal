@@ -30,6 +30,9 @@ public abstract class NettyProtocalServerTemplate extends NettyProtocalTemplate 
 
     private int port;
 
+    public NettyProtocalServerTemplate() {
+    }
+
     public NettyProtocalServerTemplate(String host, int port) {
         this.host = host;
         this.port = port;

@@ -31,6 +31,9 @@ public abstract class NettyProtocalClientTemplate extends NettyProtocalTemplate 
 
     private int localPort;
 
+    public NettyProtocalClientTemplate() {
+    }
+
     public NettyProtocalClientTemplate(String host, int port) {
         this(7777, host, port);
     }
