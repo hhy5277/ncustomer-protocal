@@ -6,6 +6,16 @@ package com.qee.protocal.constant;
 public class NettyMessageConstant {
 
     /**
+     * 业务请求消息
+     */
+    public static final byte CUSTOMER_BUSINESS_TYPE = 1;
+
+    /**
+     * 业务响应消息
+     */
+    public static final byte SERVER_BUSINESS_TYPE = 2;
+
+    /**
      * 3:握手请求消息
      */
     public static final byte CUSTOMER_AUTH_CERTI_TYPE = 3;
@@ -25,4 +35,5 @@ public class NettyMessageConstant {
      * 6：心跳应答消息
      */
     public static final byte HEART_BEAT_CHECK_PONG_TYPE = 6;
+
 }

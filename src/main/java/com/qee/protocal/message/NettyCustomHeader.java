@@ -27,7 +27,7 @@ public class NettyCustomHeader {
     private long sessionId;
 
     /**
-     * 0:业务请求消息  1:业务响应消息  2:业务请求响应消息  3:握手请求消息 4：握手应答消息 5：心跳请求消息  6：心跳应答消息
+     * 业务请求消息  1:业务请求消息  2:业务响应消息  3:握手请求消息 4：握手应答消息 5：心跳请求消息  6：心跳应答消息
      */
     private byte type;
 
