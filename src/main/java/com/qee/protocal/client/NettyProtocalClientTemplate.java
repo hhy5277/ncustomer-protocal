@@ -17,19 +17,19 @@ import java.util.concurrent.TimeUnit;
  * Created by zhuqi on 2017/9/8.
  */
 public abstract class NettyProtocalClientTemplate extends NettyProtocalTemplate {
-    private ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1);
+    protected ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1);
 
-    private Bootstrap bootstrap;
+    protected Bootstrap bootstrap;
 
-    private EventLoopGroup eventLoopGroup;
+    protected EventLoopGroup eventLoopGroup;
 
-    private EventLoopGroup business;
+    protected EventLoopGroup business;
 
-    private String host;
+    protected String host;
 
-    private int port;
+    protected int port;
 
-    private int localPort;
+    protected int localPort;
 
     public NettyProtocalClientTemplate() {
     }

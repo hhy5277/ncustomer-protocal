@@ -17,18 +17,18 @@ import java.util.Map;
 public abstract class NettyProtocalServerTemplate extends NettyProtocalTemplate {
 
 
-    private ServerBootstrap serverBootstrap;
+    protected ServerBootstrap serverBootstrap;
 
-    private EventLoopGroup boss;
+    protected EventLoopGroup boss;
 
-    private EventLoopGroup worker;
+    protected EventLoopGroup worker;
 
-    private EventLoopGroup business;
+    protected EventLoopGroup business;
 
-    private String host;
+    protected String host;
 
 
-    private int port;
+    protected int port;
 
     public NettyProtocalServerTemplate() {
     }
