@@ -37,6 +37,7 @@ public class AuthorityCertificationRequestHanlder extends ChannelInboundHandlerA
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         cause.getStackTrace();
         ctx.channel().close();
+        System.out.println(cause.getStackTrace());
         ctx.fireExceptionCaught(cause);
     }
 

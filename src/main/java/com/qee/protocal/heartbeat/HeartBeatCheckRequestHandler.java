@@ -33,6 +33,7 @@ public class HeartBeatCheckRequestHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        System.out.println(cause.getStackTrace());
         cause.getStackTrace();
         if (scheduledFuture != null) {
             scheduledFuture.cancel(true);

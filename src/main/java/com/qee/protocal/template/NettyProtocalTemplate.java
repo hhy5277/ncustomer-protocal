@@ -1,17 +1,19 @@
 package com.qee.protocal.template;
 
+import com.qee.protocal.model.Pair;
+import com.qee.protocal.service.BusinessService;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
 
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by zhuqi on 2017/9/10.
  */
-public abstract class NettyProtocalTemplate {
+public abstract class NettyProtocalTemplate extends BusinessService {
 
 
     /**
@@ -19,7 +21,7 @@ public abstract class NettyProtocalTemplate {
      *
      * @return
      */
-    public abstract Map<String, ChannelHandler> addIOChannelHandlers();
+    public abstract List<Pair<String, ChannelHandler>> addIOChannelHandlers();
 
 
     /**
@@ -27,7 +29,7 @@ public abstract class NettyProtocalTemplate {
      *
      * @return
      */
-    public abstract Map<String, ChannelHandler> addBusinessChannelHandlers();
+    public abstract List<Pair<String, ChannelHandler>> addBusinessChannelHandlers();
 
     /**
      * 启动服务
@@ -40,12 +42,12 @@ public abstract class NettyProtocalTemplate {
     public abstract void stop();
 
 
-    public void addChannelHandler(Channel channel, Map<String, ChannelHandler> handlerMap, boolean isBusinessHandler, EventLoopGroup business) {
-        if (handlerMap != null && handlerMap.size() > 0) {
+    public void addChannelHandler(Channel channel, List<Pair<String, ChannelHandler>> handlers, boolean isBusinessHandler, EventLoopGroup business) {
+        if (handlers != null && handlers.size() > 0) {
             ChannelPipeline pipeline = channel.pipeline();
-            for (Map.Entry<String, ChannelHandler> entry : handlerMap.entrySet()) {
-                String handlerName = entry.getKey();
-                ChannelHandler channelHandler = entry.getValue();
+            for (Pair<String, ChannelHandler> pair : handlers) {
+                String handlerName = pair.getFirst();
+                ChannelHandler channelHandler = pair.getSecond();
                 if (isBusinessHandler) {
                     pipeline.addLast(business, handlerName, channelHandler);
 

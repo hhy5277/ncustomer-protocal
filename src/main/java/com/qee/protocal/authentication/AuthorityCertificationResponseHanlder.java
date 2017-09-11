@@ -54,6 +54,7 @@ public class AuthorityCertificationResponseHanlder extends ChannelInboundHandler
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        System.out.println(cause.getStackTrace());
         cause.getStackTrace();
         String remoteAddress = ctx.channel().remoteAddress().toString();
         authority.remove(remoteAddress);

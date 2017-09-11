@@ -1,6 +1,7 @@
 package com.qee.protocal.client;
 
 
+import com.qee.protocal.model.Pair;
 import com.qee.protocal.template.NettyProtocalTemplate;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -8,7 +9,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.net.InetSocketAddress;
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -30,6 +31,9 @@ public abstract class NettyProtocalClientTemplate extends NettyProtocalTemplate 
     protected int port;
 
     protected int localPort;
+
+    private ChannelFuture future;
+
 
     public NettyProtocalClientTemplate() {
     }
@@ -56,15 +60,16 @@ public abstract class NettyProtocalClientTemplate extends NettyProtocalTemplate 
                     .handler(new ChannelInitializer<Channel>() {
                         @Override
                         protected void initChannel(Channel ch) throws Exception {
-                            Map<String, ChannelHandler> ioHandlerMap = addIOChannelHandlers();
-                            Map<String, ChannelHandler> businessHandlerMap = addBusinessChannelHandlers();
+                            List<Pair<String, ChannelHandler>> ioChannelHandlers = addIOChannelHandlers();
+                            List<Pair<String, ChannelHandler>> businessHandlers = addBusinessChannelHandlers();
 
-                            addChannelHandler(ch, ioHandlerMap, false, null);
-                            addChannelHandler(ch, businessHandlerMap, true, business);
+                            addChannelHandler(ch, ioChannelHandlers, false, null);
+                            addChannelHandler(ch, businessHandlers, true, business);
 
                         }
                     });
-            ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port), new InetSocketAddress("127.0.0.1", localPort)).sync();
+            future = bootstrap.connect(new InetSocketAddress(host, port), new InetSocketAddress("127.0.0.1", localPort)).sync();
+            doSimpleBussiness(future.channel());
             future.channel().closeFuture().sync();
         } finally {
             if (eventLoopGroup != null) {

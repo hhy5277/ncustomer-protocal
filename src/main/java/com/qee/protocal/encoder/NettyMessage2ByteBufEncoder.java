@@ -75,6 +75,7 @@ public class NettyMessage2ByteBufEncoder extends MessageToMessageEncoder<NettyCu
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        System.out.println(cause.getStackTrace());
         cause.getStackTrace();
         super.exceptionCaught(ctx, cause);
     }

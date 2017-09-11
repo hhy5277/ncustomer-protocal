@@ -1,5 +1,6 @@
 package com.qee.protocal.server;
 
+import com.qee.protocal.model.Pair;
 import com.qee.protocal.template.NettyProtocalTemplate;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -9,6 +10,7 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
 import java.net.InetSocketAddress;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -55,11 +57,11 @@ public abstract class NettyProtocalServerTemplate extends NettyProtocalTemplate 
                     .childHandler(new ChannelInitializer<Channel>() {
                         @Override
                         protected void initChannel(Channel ch) throws Exception {
-                            Map<String, ChannelHandler> ioHandlerMap = addIOChannelHandlers();
-                            Map<String, ChannelHandler> businessHandlerMap = addBusinessChannelHandlers();
+                            List<Pair<String, ChannelHandler>> ioHandlers = addIOChannelHandlers();
+                            List<Pair<String, ChannelHandler>> businessHandlers = addBusinessChannelHandlers();
 
-                            addChannelHandler(ch, ioHandlerMap, false, null);
-                            addChannelHandler(ch, businessHandlerMap, true, business);
+                            addChannelHandler(ch, ioHandlers, false, null);
+                            addChannelHandler(ch, businessHandlers, true, business);
 
                         }
                     });
